@@ -33,3 +33,32 @@ class UserChangeForm(forms.ModelForm):
     class Meta:
         model =CustomUser
         fields = ['mobile_number', 'password', 'email', 'name', 'family', 'gender', 'is_active', 'is_admin']
+        
+        
+class RegisterUserForm(ModelForm):
+    password1 = forms.CharField(label="رمز عبور", widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'رمز عبور را وارد کنید'}))
+    password2 = forms.CharField(label="تکرار رمز عبور", widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'تکرار رمز عبور را وارد کنید'}))
+    
+    class Meta:
+        model = CustomUser
+        fields = ['mobile_number']
+        widgets = {
+            'mobile_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'شماره موبایل خود را وارد کنید'})
+        }
+        
+    def clean_password2(self):
+        pass1 = self.cleaned_data["password1"]
+        pass2 = self.cleaned_data["password2"]
+        if pass1 and pass2 and pass1 != pass2:
+            raise ValidationError('رمز عبور و تکرار آن با هم مغایرت دارند')
+        return pass2
+    
+    
+class VerifyRegisterForm(forms.Form):
+    active_code = forms.CharField(
+        label='کد فعالسازی',
+        error_messages={'required':'این فیلد نمی تواند خالی باشد'},
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'کد فعالسازی را وارد کنید'})
+    )
+        
+    
