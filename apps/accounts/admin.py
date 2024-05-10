@@ -13,7 +13,7 @@ class CustomUserAdmin(UserAdmin):
     fieldsets=(
         (None, {'fields': ('mobile_number', 'password')}),
         ('personal info', {'fields': ('email', 'name', 'family', 'gender', 'active_code')}),
-        ('Permissions', {'fields': ('is_active', 'is_admin')}),
+        ('Permissions', {'fields': ('is_active', 'is_admin', 'is_superuser', 'groups', 'user_permissions')}),
     )
     
     add_fieldsets=(
@@ -22,7 +22,7 @@ class CustomUserAdmin(UserAdmin):
     
     search_fields = ('mobile_number',)
     ordering = ('mobile_number',)
-    filter_horizontal = ()
+    filter_horizontal = ('groups', 'user_permissions')
     
     
 admin.site.register(CustomUser, CustomUserAdmin)

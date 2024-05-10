@@ -35,6 +35,7 @@ class CustomUserManager(BaseUserManager):
         )
         user.is_active = True
         user.is_admin = True
+        user.is_superuser = True
         user.save(using=self._db)
         return user
     
@@ -59,14 +60,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     
     def __str__(self) -> str:
         return self.name + " " + self.family
-    
-    # ---- PermissionsMixin ----
-    def has_perms(self, perm_list, obj=None) -> bool:
-        return True
-    
-    def has_module_perms(self, app_label: str) -> bool:
-        return True
-    # ---- PermissionsMixin ----
     
     @property
     def is_staff(self):
