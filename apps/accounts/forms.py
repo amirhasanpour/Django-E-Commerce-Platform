@@ -60,5 +60,21 @@ class VerifyRegisterForm(forms.Form):
         error_messages={'required':'این فیلد نمی تواند خالی باشد'},
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'کد فعالسازی را وارد کنید'})
     )
+    
+    
+class LoginUserForm(forms.Form):
+    mobile_number = forms.CharField(
+        label='شماره موبایل',
+        error_messages={'required':'این فیلد نمی تواند خالی باشد'},
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'شماره موبایل را وارد کنید'})
+    )
+    password = forms.CharField(
+        label='رمز عبور',
+        error_messages={'required':'این فیلد نمی تواند خالی باشد'},
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'رمز عبور را وارد کنید'})
+    )
+    
+    
+
         
     
