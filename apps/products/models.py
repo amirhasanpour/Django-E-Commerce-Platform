@@ -1,6 +1,7 @@
 from django.db import models
 from utils import FileUpload
 from django.utils import timezone
+from django_ckeditor_5.fields import CKEditor5Field
 
 
 class Brand(models.Model):
@@ -53,8 +54,8 @@ class Feature(models.Model):
         
         
 class Product(models.Model):
-    product_name = models.CharField(max_length=500, verbose_name='نام کالا')
-    description = models.TextField(blank=True, null=True, verbose_name='توضیحات کالا')
+    product_name = models.CharField(max_length=500, verbose_name='نام کالا', null=True, blank=True)
+    description = CKEditor5Field(verbose_name='توضیحات کالا', config_name='extends')
     file_upload = FileUpload('images', 'product')
     image_name = models.ImageField(upload_to=file_upload.upload_to, verbose_name='تصویر کالا')
     price = models.PositiveIntegerField(default=0, verbose_name='قیمت کالا')
