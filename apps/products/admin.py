@@ -4,7 +4,7 @@ from django.db.models.fields.related import ManyToManyField
 from django.db.models.query import QuerySet
 from django.forms.models import ModelMultipleChoiceField
 from django.http import HttpRequest, HttpResponse
-from .models import Brand, ProductGroup, Product, Feature, ProductFeature
+from .models import Brand, ProductGroup, Product, Feature, ProductFeature, ProductGallery
 from django.db.models.aggregates import Count
 from django.core import serializers
 from django_admin_listfilter_dropdown.filters import DropdownFilter
@@ -131,7 +131,13 @@ def active_product(modeladmin, request, queryset):
     
 class ProductFeatureInstanceInlineAdmin(admin.TabularInline):
     model = ProductFeature
-    extra = 1
+    extra = 2
+    
+#----------------------------------------------------------------------------------------------
+
+class ProductGalleryInlineAdmin(admin.TabularInline):
+    model = ProductGallery
+    extra = 4
     
 #----------------------------------------------------------------------------------------------
 
@@ -141,7 +147,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = (('brand__brand_title', DropdownFilter), ('product_group__group_title',DropdownFilter),)
     search_fields = ('product_name',)
     ordering = ('update_date', 'product_name',)
-    inlines = [ProductFeatureInstanceInlineAdmin]
+    inlines = [ProductFeatureInstanceInlineAdmin, ProductGalleryInlineAdmin]
     actions = [de_active_product, active_product]
     list_editable = ['is_active']
     

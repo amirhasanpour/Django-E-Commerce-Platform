@@ -2,6 +2,7 @@ from django.db import models
 from utils import FileUpload
 from django.utils import timezone
 from django_ckeditor_5.fields import CKEditor5Field
+from django.urls import reverse
 
 
 class Brand(models.Model):
@@ -71,6 +72,10 @@ class Product(models.Model):
     def __str__(self) -> str:
         return self.product_name
     
+    def get_absolute_url(self):
+        return reverse("products:product_details", kwargs={"slug": self.slug})
+    
+    
     class Meta:
         verbose_name = 'کالا'
         verbose_name_plural = 'کالا ها'
@@ -78,7 +83,7 @@ class Product(models.Model):
         
         
 class ProductFeature(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='کالا')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='کالا', related_name='product_features')
     feature = models.ForeignKey(Feature, on_delete=models.CASCADE, verbose_name='ویژگی')
     value = models.CharField(max_length=100, verbose_name='مقدار ویژگی کالا')
     
@@ -92,7 +97,7 @@ class ProductFeature(models.Model):
         
         
 class ProductGallery(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='کالا')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='کالا', related_name='gallery_images')
     file_upload = FileUpload('images', 'product_gallery')
     image_name = models.ImageField(upload_to=file_upload.upload_to, verbose_name='تصاویر کالا')
     

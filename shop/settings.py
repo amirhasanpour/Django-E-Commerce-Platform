@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'apps.products.apps.ProductsConfig',
     'django_admin_listfilter_dropdown',
     'django_ckeditor_5',
+    'django_render_partial',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [

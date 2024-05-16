@@ -1,0 +1,25 @@
+{% extends "main_templates.html" %}
+
+{% block title %} | گروه ها و دسته بندی ها{% endblock title %}
+
+{% block content %}
+
+<div class="block-categories__list m-5">
+    {% for group in product_groups %}
+        <div class="block-categories__item category-card category-card--layout--compact">
+            <div class="category-card__body">
+                <div class="category-card__image">
+                    <a href="{% url "products:products_of_group" slug=group.slug %}">
+                        <img src="{{media_url}}{{group.image_name}}" alt="">
+                    </a>
+                </div>
+                <div class="category-card__content">
+                    <div class="category-card__name"><a href="{% url "products:products_of_group" slug=group.slug %}">{{group.group_title}}</a></div>
+                    <div class="category-card__products">{{group.products_of_groups.all|length}} محصول</div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

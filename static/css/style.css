@@ -9532,3 +9532,10 @@ screen and (-ms-high-contrast:active) {
 .lg-outer .lg-thumb-item:hover{
 	border-color: #ee4156;
 }
+
+.product-flexbox {
+	display: flex !important;
+	flex-direction: row;
+	justify-content: center;
+	flex-wrap: wrap;
+}
