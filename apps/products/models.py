@@ -5,6 +5,9 @@ from django_ckeditor_5.fields import CKEditor5Field
 from django.urls import reverse
 
 
+#----------------------------------------------------------------------------------------------
+
+
 class Brand(models.Model):
     brand_title = models.CharField(max_length=100, verbose_name='نام برند')
     file_upload = FileUpload('images', 'brand')
@@ -18,6 +21,8 @@ class Brand(models.Model):
         verbose_name = 'برند'
         verbose_name_plural = 'برند ها'
         
+        
+#----------------------------------------------------------------------------------------------
         
         
 class ProductGroup(models.Model):
@@ -40,6 +45,8 @@ class ProductGroup(models.Model):
         verbose_name_plural = 'گروه های کالا'
         
         
+#----------------------------------------------------------------------------------------------       
+        
         
 class Feature(models.Model):
     feature_name = models.CharField(max_length=100, verbose_name='نام ویژگی')
@@ -53,10 +60,12 @@ class Feature(models.Model):
         verbose_name_plural = 'ویژگی ها'
         
         
+#----------------------------------------------------------------------------------------------
+        
         
 class Product(models.Model):
     product_name = models.CharField(max_length=500, verbose_name='نام کالا', null=True, blank=True)
-    description = CKEditor5Field(verbose_name='توضیحات کالا', config_name='extends')
+    description = CKEditor5Field(verbose_name='توضیحات کالا', config_name='extends', null=True)
     file_upload = FileUpload('images', 'product')
     image_name = models.ImageField(upload_to=file_upload.upload_to, verbose_name='تصویر کالا')
     price = models.PositiveIntegerField(default=0, verbose_name='قیمت کالا')
@@ -81,11 +90,29 @@ class Product(models.Model):
         verbose_name_plural = 'کالا ها'
         
         
+#----------------------------------------------------------------------------------------------
+
+
+class FeatureValue(models.Model):
+    value_title = models.CharField(max_length=200, verbose_name='عنوان مقدار')
+    feature = models.ForeignKey(Feature, on_delete=models.CASCADE, blank=True, null=True, verbose_name='ویژگی', related_name='feature_values')
+    
+    def __str__(self) -> str:
+        return f"{self.id} {self.value_title}"
+    
+    class Meta:
+        verbose_name = 'مقدار ویژگی'
+        verbose_name_plural = 'مقادیر ویژگی ها'
+        
+
+#----------------------------------------------------------------------------------------------
+        
         
 class ProductFeature(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='کالا', related_name='product_features')
     feature = models.ForeignKey(Feature, on_delete=models.CASCADE, verbose_name='ویژگی')
     value = models.CharField(max_length=100, verbose_name='مقدار ویژگی کالا')
+    filter_value = models.ForeignKey(FeatureValue, on_delete=models.CASCADE, null=True, blank=True, verbose_name='مقدار ویژگی برای فیلتر', related_name='feature_value_for_filter')
     
     def __str__(self) -> str:
         return f"{self.product} - {self.feature} : {self.value}"
@@ -94,6 +121,8 @@ class ProductFeature(models.Model):
         verbose_name = 'ویژگی محصول'
         verbose_name_plural = 'ویژگی های محصولات'
         
+        
+#----------------------------------------------------------------------------------------------
         
         
 class ProductGallery(models.Model):

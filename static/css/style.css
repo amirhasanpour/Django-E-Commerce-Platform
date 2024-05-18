@@ -9539,3 +9539,16 @@ screen and (-ms-high-contrast:active) {
 	justify-content: center;
 	flex-wrap: wrap;
 }
+
+.btn-filter-delete {
+	display: none;
+	border: 1px solid #ccc;
+	padding: 0px 10px;
+	margin-bottom: 27px;
+	border-radius: 3px;
+}
+
+.btn-filter-delete:hover {
+	background-color: red;
+	color: white;
+}

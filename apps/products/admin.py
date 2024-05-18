@@ -4,7 +4,7 @@ from django.db.models.fields.related import ManyToManyField
 from django.db.models.query import QuerySet
 from django.forms.models import ModelMultipleChoiceField
 from django.http import HttpRequest, HttpResponse
-from .models import Brand, ProductGroup, Product, Feature, ProductFeature, ProductGallery
+from .models import Brand, ProductGroup, Product, Feature, ProductFeature, ProductGallery, FeatureValue
 from django.db.models.aggregates import Count
 from django.core import serializers
 from django_admin_listfilter_dropdown.filters import DropdownFilter
@@ -102,14 +102,37 @@ class ProductGroupAdmin(admin.ModelAdmin):
     
     
 # =============================================================================================
+
+
+class FeatureValueInlineAdmin(admin.TabularInline):
+    model = FeatureValue
+    extra = 3
+
+
+#----------------------------------------------------------------------------------------------   
    
 
 @admin.register(Feature)
 class FeatureAdmin(admin.ModelAdmin):
-    list_display = ('feature_name',)
+    list_display = ('feature_name', 'display_groups', 'display_feature_values')
     list_filter = ('feature_name',)
     search_fields = ('feature_name',)
-    ordering = ('feature_name',) 
+    ordering = ('feature_name',)
+    inlines = [FeatureValueInlineAdmin]
+    
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == 'product_group':
+            kwargs["queryset"] = ProductGroup.objects.filter(~Q(group_parent=None))
+        return super().formfield_for_manytomany(db_field, request, **kwargs)
+    
+    def display_groups(self, obj):
+        return ', '.join([group.group_title for group in obj.product_group.all()])
+    
+    def display_feature_values(self, obj):
+        return ', '.join([feature_value.value_title for feature_value in obj.feature_values.all()])
+    
+    display_groups.short_description = 'گروه های دارای این ویژگی'
+    display_feature_values.short_description = 'مقادیر ممکن برای این ویژگی'
     
     
 # =============================================================================================
@@ -132,6 +155,16 @@ def active_product(modeladmin, request, queryset):
 class ProductFeatureInstanceInlineAdmin(admin.TabularInline):
     model = ProductFeature
     extra = 2
+    
+    class Media:
+        css = {
+            'all': ('css/admin_style.css',)
+        }
+        
+        js = (
+            'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js',
+            'js/admin_script.js',
+        )
     
 #----------------------------------------------------------------------------------------------
 
@@ -177,4 +210,20 @@ class ProductAdmin(admin.ModelAdmin):
         ('تاریخ وزمان', {'fields': (
             'published_date',
             )}),
+    )
+    
+    
+# =============================================================================================
+
+
+@admin.register(FeatureValue)
+class FeatureValueAdmin(admin.ModelAdmin):
+    list_display = ('value_title', 'feature',)
+    ordering = ('feature',)
+    
+    fieldsets = (
+        (None, {'fields': (
+            'feature',
+            'value_title',
+        )}),
     )

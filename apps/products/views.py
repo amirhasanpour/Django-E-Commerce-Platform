@@ -1,7 +1,13 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Product, ProductGroup
-from django.db.models import Q, Count
+from .models import Product, ProductGroup, FeatureValue, Brand
+from django.db.models import Q, Count, Min, Max
 from django.views import View
+from django.http import JsonResponse
+from .filters import ProductFilter
+from django.core.paginator import Paginator
+
+
+#----------------------------------------------------------------------------------------------
 
 
 
@@ -10,7 +16,11 @@ def get_root_group():
 
 
 
-# Cheapest Products
+#----------------------------------------------------------------------------------------------
+
+
+
+# Cheapest products
 def get_cheapest_products(request, *args, **kwargs):
     products = Product.objects.filter(is_active=True).order_by('price')[:5]
     product_groups = get_root_group()
@@ -22,7 +32,11 @@ def get_cheapest_products(request, *args, **kwargs):
 
 
 
-# Last Products
+#----------------------------------------------------------------------------------------------
+
+
+
+# Last products
 def get_last_products(request, *args, **kwargs):
     products = Product.objects.filter(is_active=True).order_by('-published_date')[:5]
     product_groups = get_root_group()
@@ -34,7 +48,11 @@ def get_last_products(request, *args, **kwargs):
 
 
 
-# Popular Groups
+#----------------------------------------------------------------------------------------------
+
+
+
+# Popular groups
 def get_popular_product_groups(request, *args, **kwargs):
     product_groups = ProductGroup.objects.filter(Q(is_active=True)\
         & ~Q(group_parent=None)).annotate(count=Count('products_of_groups'))\
@@ -46,7 +64,11 @@ def get_popular_product_groups(request, *args, **kwargs):
 
 
 
-# Product Details
+#----------------------------------------------------------------------------------------------
+
+
+
+# Product details
 class ProductDetailView(View):
     def get(self, request, slug):
         product = get_object_or_404(Product, slug=slug)
@@ -54,8 +76,12 @@ class ProductDetailView(View):
             return render(request, 'products_app/product_detail.html', {'product': product})
         
         
+        
+#----------------------------------------------------------------------------------------------
+        
+        
 
-# Related Products   
+# Related products   
 def get_related_products(request, *args, **kwargs):
     current_product = get_object_or_404(Product, slug=kwargs['slug'])
     related_products = []
@@ -65,18 +91,145 @@ def get_related_products(request, *args, **kwargs):
 
 
 
-# Product Groups
+#----------------------------------------------------------------------------------------------
+
+
+
+# Count of thr products in groups
 class ProductGroupsView(View):
     def get(self, request):
         product_groups = ProductGroup.objects.filter(Q(is_active=True)).annotate(count=Count('products_of_groups'))\
             .order_by('-count')
         return render(request, 'products_app/product_groups.html', {'product_groups': product_groups})
+    
+    
+    
+#----------------------------------------------------------------------------------------------
 
 
 
-# Show the Products of Group
+# Show the products of group
 class ProductsByGroupView(View):
     def get(self, request, *args, **kwargs):
-        current_group = get_object_or_404(ProductGroup, slug=kwargs['slug'])
+        slug=kwargs['slug']
+        current_group = get_object_or_404(ProductGroup, slug=slug)
         products_of_group = Product.objects.filter(Q(is_active=True) & Q(product_group=current_group))
-        return render(request, 'products_app/products_of_group.html', {'products_of_group': products_of_group, 'current_group': current_group})
+        
+        res_aggre = products_of_group.aggregate(min=Min('price'), max=Max('price'))
+        
+        # price filter
+        filter = ProductFilter(request.GET, queryset=products_of_group)
+        products_of_group = filter.qs
+        
+        # brand filter
+        brand_filter = request.GET.getlist('brand')
+        if brand_filter:
+            products_of_group = products_of_group.filter(brand__id__in=brand_filter)
+            
+        # feature filter
+        feature_filter = request.GET.getlist('feature')
+        if feature_filter:
+            products_of_group = products_of_group.filter(product_features__filter_value__id__in=feature_filter).distinct()
+            
+        # sort type
+        sort_type = request.GET.get('sort_type')
+        if not sort_type:
+            sort_type = "0"
+        if sort_type == "1":
+            products_of_group = products_of_group.order_by('price')
+        elif sort_type == "2":
+            products_of_group = products_of_group.order_by('-price')
+            
+        group_slug = slug
+        product_per_page = 2                                                   # the number of product in each page
+        paginator = Paginator(products_of_group, product_per_page)
+        page_number = request.GET.get('page')                                  # get the number of current page
+        page_obj = paginator.get_page(page_number)                             # the list of the products after pagination for showing in current page
+        product_count = products_of_group.count()                              # all of the available products in current group
+        
+        # list of the numbers for creating drop-down menue, for set number of products in each page, by user
+        show_count_product = []
+        i = product_per_page
+        while i < product_count:
+            show_count_product.append(i)
+            i *= 2
+        show_count_product.append(i)
+        
+        
+        context = {
+            'products_of_group': products_of_group,
+            'current_group': current_group,
+            'res_aggre': res_aggre,
+            'group_slug': group_slug,
+            'page_obj': page_obj,
+            'product_count': product_count,
+            'filter': filter,
+            'sort_type': sort_type,
+            'show_count_product': show_count_product,
+        }
+        
+        return render(request, 'products_app/products_of_group.html', context)
+    
+    
+    
+#----------------------------------------------------------------------------------------------
+    
+    
+    
+# Two sync dropdown in admin panel
+def get_filter_value_for_feature(request):
+    if request.method == 'GET':
+        feature_id = request.GET.get("feature_id")
+        print('*'*50)
+        print(feature_id)
+        print('*'*50)
+        feature_values = FeatureValue.objects.filter(feature_id=feature_id)
+        print(feature_values)
+        res = {fv.value_title:fv.id for fv in feature_values}
+        print(res)
+        return JsonResponse(data=res, safe=False)
+    
+    
+    
+#----------------------------------------------------------------------------------------------
+    
+    
+    
+# Product group list for filtering
+def get_product_groups(request):
+    product_groups = ProductGroup.objects.annotate(count=Count('products_of_groups'))\
+        .filter(Q(is_active=True) & ~Q(count=0))\
+        .order_by('-count')
+    return render(request, 'products_app/partials/product_groups.html', {'product_groups': product_groups})
+
+
+
+#----------------------------------------------------------------------------------------------
+
+
+
+# List of brands for filtering
+def get_brands(request, *args, **kwargs):
+        product_group = get_object_or_404(ProductGroup, slug=kwargs['slug'])
+        brand_list_id = product_group.products_of_groups.filter(is_active=True).values('brand_id')
+        brands = Brand.objects.filter(pk__in=brand_list_id)\
+            .annotate(count=Count('brands'))\
+            .filter(~Q(count=0))\
+            .order_by('-count')
+        
+        return render(request, 'products_app/partials/brands.html', {'brands': brands})
+    
+    
+    
+#----------------------------------------------------------------------------------------------
+    
+    
+    
+# Feature values for a special product group for filtering
+def get_features_for_filter(request, *args, **kwargs):
+    product_group = get_object_or_404(ProductGroup, slug=kwargs['slug'])
+    feature_list = product_group.features_of_groups.all()
+    feature_dict = dict()
+    for feature in feature_list:
+        feature_dict[feature]=feature.feature_values.all()
+    return render(request, 'products_app/partials/feature_filter.html', {'feature_dict': feature_dict})
