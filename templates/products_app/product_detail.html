@@ -206,13 +206,11 @@
                                 <div class="product__actions">
                                     <div class="product__actions-item">
                                         <div class="input-number product__quantity">
-                                            <input id="product-quantity" class="input-number__input form-control form-control-lg" type="number" min="1" value="1">
-                                            <div class="input-number__add"></div>
-                                            <div class="input-number__sub"></div>
+                                            <input id="product-quantity" class="form-control form-control-lg" type="number" min="1" value="1">
                                         </div>
                                     </div>
                                     <div class="product__actions-item product__actions-item--addtocart">
-                                        <button class="btn btn-primary btn-lg">افزودن به سبد</button>
+                                        <button type="button" class="btn btn-primary btn-lg" onclick="add_to_shop_cart({{product.id}}, 0)">افزودن به سبد</button>
                                     </div>
                                     <div class="product__actions-item product__actions-item--wishlist">
                                         <button type="button" class="btn btn-secondary btn-svg-icon btn-lg" data-toggle="tooltip" title="Wishlist">
@@ -255,58 +253,6 @@
                             {% autoescape off %}
                                 {{product.description}}
                             {% endautoescape %}
-                        </div>
-                    </div>
-                    <div class="product-tabs__pane" id="tab-specification">
-                        <div class="spec">
-                            <h3 class="spec__header">مشخصات فنی</h3>
-                            <div class="spec__section">
-                                <h4 class="spec__section-title">عمومی</h4>
-                                <div class="spec__row">
-                                    <div class="spec__name">جنس</div>
-                                    <div class="spec__value">آلومینیوم، پلاستیک</div>
-                                </div>
-                                <div class="spec__row">
-                                    <div class="spec__name">نوع موتور</div>
-                                    <div class="spec__value">بدون برس</div>
-                                </div>
-                                <div class="spec__row">
-                                    <div class="spec__name">ولتاژ باتری</div>
-                                    <div class="spec__value">18 ولت</div>
-                                </div>
-                                <div class="spec__row">
-                                    <div class="spec__name">نوع باتری</div>
-                                    <div class="spec__value">لیتیوم یون</div>
-                                </div>
-                                <div class="spec__row">
-                                    <div class="spec__name">تعداد سرعت ها</div>
-                                    <div class="spec__value">2</div>
-                                </div>
-                                <div class="spec__row">
-                                    <div class="spec__name">زمان شارژ</div>
-                                    <div class="spec__value">2 ساعت</div>
-                                </div>
-                                <div class="spec__row">
-                                    <div class="spec__name">وزن</div>
-                                    <div class="spec__value">1.5 کیلوگرم</div>
-                                </div>
-                            </div>
-                            <div class="spec__section">
-                                <h4 class="spec__section-title">ابعاد</h4>
-                                <div class="spec__row">
-                                    <div class="spec__name">طول</div>
-                                    <div class="spec__value">99 mm</div>
-                                </div>
-                                <div class="spec__row">
-                                    <div class="spec__name">عرض</div>
-                                    <div class="spec__value">207 mm</div>
-                                </div>
-                                <div class="spec__row">
-                                    <div class="spec__name">ارتفاع</div>
-                                    <div class="spec__value">208 mm</div>
-                                </div>
-                            </div>
-                            <div class="spec__disclaimer">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با</div>
                         </div>
                     </div>
                     <div class="product-tabs__pane" id="tab-reviews">

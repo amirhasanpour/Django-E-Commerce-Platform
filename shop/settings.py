@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'apps.main.apps.MainConfig',
     'apps.accounts.apps.AccountsConfig',
     'apps.products.apps.ProductsConfig',
+    'apps.orders.apps.OrdersConfig',
+    
     'django_admin_listfilter_dropdown',
     'django_ckeditor_5',
     'django_render_partial',
