@@ -3,6 +3,7 @@ from typing import Collection
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.utils import timezone
+from utils import FileUpload
 
 
 
@@ -64,3 +65,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     @property
     def is_staff(self):
         return self.is_admin
+    
+    
+    
+class Customer(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
+    phone_number = models.CharField(max_length=11, null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    file_upload = FileUpload('images', 'customer')
+    image_name = models.ImageField(upload_to=file_upload.upload_to, null=True, blank=True , verbose_name='تصویر پروفایل')
+    
+    def __str__(self) -> str:
+        return f"{self.user}"

@@ -46,7 +46,7 @@
                         <td class="cart-table__column cart-table__column--price" data-title="قیمت">{{item.price | intcomma}} تومان</td>
                         <td class="cart-table__column cart-table__column--quantity" data-title="تعداد">
                             <div class="input-number">
-                                <input id="qty_{{item.product.id}}" type="number" min="1" value="{{item.qty}}" style="width: 60px;" class="p-2 border-danger">
+                                <input id="qty_{{item.product.id}}" type="number" min="1" value="{{item.qty}}" style="width: 60px; border: 2px solid black; border-radius: 15px;" class="p-2 border-danger">
                             </div>
                         </td>
                         <td class="cart-table__column cart-table__column--total" data-title="جمع کل">{{item.total_price | intcomma}} تومان</td>
@@ -61,7 +61,7 @@
             </table>
             <div class="cart__actions">
                 <div class="cart__buttons">
-                    <a href="index.html" class="btn btn-success">ادامه خرید</a>
+                    {% comment %} <a href="index.html" class="btn btn-success">ادامه خرید</a> {% endcomment %}
                     <a class="btn btn-primary cart__update-button" onclick="update_shop_cart()">به روز رسانی سبد</a></div>
             </div>
             <div class="row justify-content-end pt-5">
@@ -100,7 +100,7 @@
                                         <td>{{order_final_price | intcomma}} تومان</td>
                                     </tr>
                                 </tfoot>
-                            </table><a class="btn btn-primary btn-xl btn-block cart__checkout-button" href="checkout.html">پرداخت</a></div>
+                            </table><a class="btn btn-primary btn-xl btn-block cart__checkout-button" href="checkout.html">ادامه خرید</a></div>
                     </div>
                 </div>
             </div>

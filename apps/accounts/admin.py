@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .forms import UserChangeForm, UserCreationForm
-from .models import CustomUser
+from .models import CustomUser, Customer
 
 class CustomUserAdmin(UserAdmin):
     form = UserChangeForm
@@ -26,3 +26,9 @@ class CustomUserAdmin(UserAdmin):
     
     
 admin.site.register(CustomUser, CustomUserAdmin)
+
+
+
+@admin.register(Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ['user', 'phone_number']
