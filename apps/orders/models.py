@@ -6,13 +6,27 @@ from uuid import uuid4
 
 
 
+class PaymentType(models.Model):
+    payment_title = models.CharField(max_length=50, verbose_name='نوع پرداخت')
+    
+    def __str__(self) -> str:
+        return self.payment_title
+    
+    class Meta:
+        verbose_name = 'نوع پرداخت'
+        verbose_name_plural = 'انواع روش پرداخت'
+        
+
+
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='orders', verbose_name='مشتری')
     register_date = models.DateField(default=timezone.now, verbose_name='تاریخ درج سفارش')
     update_date = models.DateField(auto_now=True, verbose_name='تاریخ ویرایش سفارش')
     is_finaly = models.BooleanField(default=False, verbose_name='نهایی شده')
     order_code = models.UUIDField(unique=True, default=uuid4, editable=False, verbose_name='کد تولیدی برای سفارش')
-    discount = models.IntegerField(blank=True, null=True, default=None, verbose_name='تخفیف روی فاکتور')
+    discount = models.IntegerField(blank=True, null=True, default=0, verbose_name='تخفیف روی فاکتور')
+    description = models.TextField(blank=True, null=True, verbose_name='توضیحات')
+    payment_type = models.ForeignKey(PaymentType, default=None, on_delete=models.CASCADE, null=True, blank=True, verbose_name='نوع پرداخت', related_name='payment')
     
     def __str__(self) -> str:
         return f"{self.customer}\t{self.id}\t{self.is_finaly}"

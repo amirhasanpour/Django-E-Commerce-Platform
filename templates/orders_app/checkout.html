@@ -1,0 +1,143 @@
+{% extends "main_templates.html" %}
+{% load render_partial %}
+{% load humanize %}
+
+{% block title %} | فرم سفارش{% endblock title %}
+
+{% block content %}
+
+<div class="site__body">
+    <div class="page-header">
+        <div class="page-header__container container">
+            <div class="page-header__breadcrumb">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">خانه</a>
+                            /
+                        </li>
+                        
+                        <li class="breadcrumb-item active" aria-current="page">فرم سفارش</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="page-header__title">
+                <h1>فرم سفارش</h1></div>
+        </div>
+    </div>
+    <div class="checkout block">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-6 col-xl-7">
+                    <div class="card mb-lg-0">
+                        <div class="card-body">
+                            <h3 class="card-title">جزئیات پرداخت</h3>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="checkout-first-name">نام</label>
+                                    {{form.name}}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="checkout-last-name">نام خانوادگی</label>
+                                    {{form.family}}
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="checkout-first-name">ایمیل</label>
+                                    {{form.email}}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="checkout-last-name">تلفن</label>
+                                    {{form.phone_number}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="checkout-street-address">آدرس</label>
+                                {{form.address}}
+                            </div>
+                            <div class="form-group">
+                                <label for="checkout-postcode">توضیحات سفارش <span style="color: gray;">(اختیاری)</span></label>
+                                {{form.description}}
+                            </div>
+                            <div class="form-group">
+                                <label for="checkout-postcode" class='mb-2'>روش پرداخت</label>
+                                <span class="small">{{form.payment_type}}</span>
+                            </div>
+                            <div class="checkout__agree form-group">
+                                <div class="form-check"><span class="form-check-input input-check"><span class="input-check__body"><input class="input-check__input" type="checkbox" id="checkout-terms"> <span class="input-check__box"></span>
+                                    <svg class="input-check__icon" width="9px" height="7px">
+                                        <use xlink:href="images/sprite.svg#check-9x7"></use>
+                                    </svg>
+                                    </span>
+                                    </span>
+                                    <label class="form-check-label" for="checkout-terms">من <a target="_blank" href="terms-and-conditions.html">قوانین و مقررات</a> را خوانده و موافقم *</label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-xl btn-block">ثبت سفارش</button>
+
+                        </div>
+                        
+                        <div class="card-divider"></div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 col-xl-5 mt-4 mt-lg-0">
+                    <div class="card mb-0">
+                        <div class="card-body">
+                            <h3 class="card-title">سفارش شما</h3>
+                            <table class="checkout__totals">
+                                <thead class="checkout__totals-header">
+                                    <tr>
+                                        <th>محصول</th>
+                                        <th>تعداد</th>
+                                        <th>جمع کل</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="checkout__totals-products">
+                                    {% for item in shop_cart %}
+                                    <tr>
+                                        <td>{{item.product}}</td>
+                                        <td>{{item.qty}}</td>
+                                        <td>{{item.price | intcomma}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tbody class="checkout__totals-subtotals">
+                                    <tr>
+                                        <th>جمع جزء</th>
+                                        <td colspan="2">{{total_price | intcomma}} تومان</td>
+                                    </tr>
+                                    <tr>
+                                        <th>حمل و نقل</th>
+                                        <td colspan="2">{{delivery | intcomma}} تومان</td>
+                                    </tr>
+                                    <tr>
+                                        <th>مالیات</th>
+                                        <td colspan="2">{{tax | intcomma}} تومان</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot class="checkout__totals-footer">
+                                    <tr class="text-danger font-weight-bold">
+                                        <th>جمع کل</th>
+                                        <td colspan="2">{{order_final_price | intcomma}} تومان</td>
+                                    </tr>
+
+                                    <tr>
+                                        <th><span class="small">کد تخفیف</span></th>
+                                        <td colspan="2">
+                                            <div class="mt-5">
+                                                <input type="text" class="form-control text-center" id="checkout-postcode" placeholder="کد تخفیف">
+                                                <button class="btn btn-danger mt-2">اعمال کد</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
