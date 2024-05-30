@@ -7,6 +7,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from apps.accounts.models import Customer
 from .models import Order, OrderDetails, PaymentType
 from .forms import OrderForm
+from django.core.exceptions import ObjectDoesNotExist
+from apps.discounts.forms import CouponForm
+from apps.discounts.models import Coupon
+from django.db.models import Q
+from datetime import datetime
+from django.contrib import messages
 
 
 class ShopCartView(View):
@@ -72,8 +78,9 @@ def status_of_shop_cart(request):
 
 class CreateOrderView(LoginRequiredMixin, View):
     def get(self, request):
-        customer = get_object_or_404(Customer, user=request.user)
-        if not customer:
+        try:
+            customer = Customer.objects.get(user=request.user)
+        except ObjectDoesNotExist:
             customer = Customer.objects.create(user=request.user)
         
         order = Order.objects.create(customer=customer, payment_type=get_object_or_404(PaymentType, id=1))
@@ -105,6 +112,8 @@ class CheckoutOrderView(LoginRequiredMixin, View):
             delivery = 0
         tax = int(0.03 * total_price)
         order_final_price = total_price + delivery + tax
+        if order.discount > 0:
+            order_final_price = order_final_price - (order_final_price * order.discount/100)
         
         data = {
             'name': user.name,
@@ -117,15 +126,55 @@ class CheckoutOrderView(LoginRequiredMixin, View):
         }
         
         form = OrderForm(data)
+        form_coupon = CouponForm()
         
         context = {
+            'order': order,
             'shop_cart': shop_cart,
             'total_price': total_price,
             'delivery': delivery,
             'tax': tax,
             'order_final_price': order_final_price,
             'form': form,
+            'form_coupon': form_coupon,
         }
         
         return render(request, 'orders_app/checkout.html', context)
+    
+    
+    
+class ApplayCoupon(View):
+    def post(self, request, *args, **kwargs):
+        order_id = kwargs['order_id']
+        coupon_form = CouponForm(request.POST)
+        if coupon_form.is_valid():
+            cd = coupon_form.cleaned_data
+            coupon_code = cd['coupon_code']
+            
+            coupon = Coupon.objects.filter(
+                Q(coupon_code=coupon_code) &
+                Q(is_active=True) &
+                Q(start_date__lte=datetime.now()) &
+                Q(end_date__gte=datetime.now())
+            )
+            
+            discount = 0
+            try:
+                order = Order.objects.get(id=order_id)
+                if coupon:
+                    discount = coupon[0].discount
+                    order.discount = discount
+                    order.save()
+                    messages.success(request, 'اعمال کوپن با موفقیت انجام شد')
+                    return redirect('orders:checkout_order', order_id)
+                else:
+                    order.discount = discount
+                    order.save()
+                    messages.error(request, 'کد وارد شده معتبر نیست', 'danger')
+                    return redirect('orders:checkout_order', order_id)
+            except ObjectDoesNotExist:
+                messages.error(request, 'سفارش موجود نیست')
+            return redirect('orders:checkout_order', order_id)
+            
+            
         

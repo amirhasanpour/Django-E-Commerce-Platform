@@ -97,7 +97,7 @@
                                     <tr>
                                         <td>{{item.product}}</td>
                                         <td>{{item.qty}}</td>
-                                        <td>{{item.price | intcomma}}</td>
+                                        <td>{{item.total_price | intcomma}}</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -120,18 +120,13 @@
                                         <th>جمع کل</th>
                                         <td colspan="2">{{order_final_price | intcomma}} تومان</td>
                                     </tr>
-
-                                    <tr>
-                                        <th><span class="small">کد تخفیف</span></th>
-                                        <td colspan="2">
-                                            <div class="mt-5">
-                                                <input type="text" class="form-control text-center" id="checkout-postcode" placeholder="کد تخفیف">
-                                                <button class="btn btn-danger mt-2">اعمال کد</button>
-                                            </div>
-                                        </td>
-                                    </tr>
                                 </tfoot>
                             </table>
+                            <form action="{% url "orders:applay_coupon" order_id=order.id %}" method="post" style="display: flex; justify-content: center;">
+                                {% csrf_token %}
+                                {{form_coupon}}
+                                <button type="submit" class="btn btn-primary">اعمال</button>
+                            </form>
                         </div>
                     </div>
                 </div>

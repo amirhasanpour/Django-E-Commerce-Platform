@@ -43,7 +43,15 @@
                                 {{item.product.product_name}}
                             </a>
                         </td>
-                        <td class="cart-table__column cart-table__column--price" data-title="قیمت">{{item.price | intcomma}} تومان</td>
+                        <td class="cart-table__column cart-table__column--price" data-title="قیمت">
+                        {% if item.final_price < item.price %}
+                            <del>{{item.price | intcomma}} تومان</del>
+                            <br>
+                            {{item.final_price | intcomma}} تومان
+                        {% else %}
+                            {{item.final_price | intcomma}} تومان
+                        {% endif %}
+                        </td>
                         <td class="cart-table__column cart-table__column--quantity" data-title="تعداد">
                             <div class="input-number">
                                 <input id="qty_{{item.product.id}}" type="number" min="1" value="{{item.qty}}" style="width: 60px; border: 2px solid black; border-radius: 15px;" class="p-2 border-danger">
