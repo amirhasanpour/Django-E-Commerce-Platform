@@ -4,6 +4,7 @@ from django.utils import timezone
 from django_ckeditor_5.fields import CKEditor5Field
 from django.urls import reverse
 from datetime import datetime
+from django.db.models import Avg, Sum
 
 
 #----------------------------------------------------------------------------------------------
@@ -85,6 +86,7 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse("products:product_details", kwargs={"slug": self.slug})
     
+    # product price with discount
     def get_price_by_discount(self):
         list1 = []
         for dbd in self.discount_basket_details2.all():
@@ -96,6 +98,18 @@ class Product(models.Model):
         if (len(list1) > 0):
             discount = max(list1)
         return round(self.price - (self.price*discount/100))
+    
+    # number of product in warehouse
+    def get_number_in_warehouse(self):
+        sum1 = self.warehouse_product.filter(warehouse_type_id=1).aggregate(Sum('qty'))
+        sum2 = self.warehouse_product.filter(warehouse_type_id=2).aggregate(Sum('qty'))
+        input = 0
+        if sum1['qty__sum']!=None:
+            input = sum1['qty__sum']
+        output = 0
+        if sum2['qty__sum']!=None:
+            output = sum2['qty__sum']
+        return input - output
     
     class Meta:
         verbose_name = 'کالا'

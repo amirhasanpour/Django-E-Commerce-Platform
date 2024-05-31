@@ -170,7 +170,11 @@
                     <!-- .product__info / end -->
                     <!-- .product__sidebar -->
                     <div class="product__sidebar">
-                        <div class="product__availability">موجودی: <span class="text-success">موجود در انبار</span></div>
+                        {% if product.get_number_in_warehouse <= 0 %}
+                            <div class="product__availability">موجودی: <span class="text-success">ناموجود در انبار</span></div>
+                        {% else %}
+                            <div class="product__availability">موجودی: <span class="text-success">موجود در انبار</span></div>
+                        {% endif %}
                         {% if product.price > product.get_price_by_discount %}
                             <div class="product__prices"><del>{{product.price | intcomma }} تومان</del></div>
                             <div class="product__prices">{{product.get_price_by_discount | intcomma }} تومان</div>
@@ -209,14 +213,18 @@
                             <div class="form-group product__option">
                                 <label class="product__option-label" for="product-quantity">تعداد</label>
                                 <div class="product__actions">
-                                    <div class="product__actions-item">
-                                        <div class="input-number product__quantity">
-                                            <input id="product-quantity" class="form-control form-control-lg" type="number" min="1" value="1">
+                                    {% if product.get_number_in_warehouse <= 0 %}
+                                        <h3 style="color: red;">ناموجود</h3>
+                                    {% else %}
+                                        <div class="product__actions-item">
+                                            <div class="input-number product__quantity">
+                                                <input id="product-quantity" class="form-control form-control-lg" type="number" min="1" value="1">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="product__actions-item product__actions-item--addtocart">
-                                        <button type="button" class="btn btn-primary btn-lg" onclick="add_to_shop_cart({{product.id}}, 0)">افزودن به سبد</button>
-                                    </div>
+                                        <div class="product__actions-item product__actions-item--addtocart">
+                                            <button type="button" class="btn btn-primary btn-lg" onclick="add_to_shop_cart({{product.id}}, 0)">افزودن به سبد</button>
+                                        </div>
+                                    {% endif %}
                                     <div class="product__actions-item product__actions-item--wishlist">
                                         <button type="button" class="btn btn-secondary btn-svg-icon btn-lg" data-toggle="tooltip" title="Wishlist">
                                             <svg width="16px" height="16px">

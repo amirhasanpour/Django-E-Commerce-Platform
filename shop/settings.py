@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'apps.orders.apps.OrdersConfig',
     'apps.discounts.apps.DiscountsConfig',
     'apps.payments.apps.PaymentsConfig',
+    'apps.warehouses.apps.WarehousesConfig',
     
     'django_admin_listfilter_dropdown',
     'django_ckeditor_5',
@@ -237,4 +238,4 @@ CKEDITOR_5_CONFIGS = {
 
 
 MERCHANT = 'your merchant id from zarinpal'
-SANDBOX = 'www'
+SANDBOX = 'api'

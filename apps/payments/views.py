@@ -3,6 +3,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from apps.orders.models import Order
 from apps.accounts.models import Customer
+from apps.warehouses.models import Warehouse, WarehouseType
 import requests
 import json
 from django.conf import settings
@@ -21,6 +22,7 @@ else:
 ZP_API_REQUEST = f"https://{sandbox}.zarinpal.com/pg/rest/WebGate/PaymentRequest.json"
 ZP_API_VERIFY = f"https://{sandbox}.zarinpal.com/pg/rest/WebGate/PaymentVerification.json"
 ZP_API_STARTPAY = f"https://{sandbox}.zarinpal.com/pg/StartPay/"
+
 CallbackURL = 'http://127.0.0.1:8080/payments/verify/'
 
 
@@ -80,7 +82,7 @@ class ZarinpalPaymentVerifyView(LoginRequiredMixin, View):
         order = Order.objects.get(id=order_id)
         payment = Payment.objects.get(id=payment_id)
         
-        t_status = request.GET.get('Status')
+        
         t_authority = request.GET['Authority']
         data = {
         "MerchantID": settings.MERCHANT,
@@ -103,6 +105,16 @@ class ZarinpalPaymentVerifyView(LoginRequiredMixin, View):
                 payment.status_code = str(response['Status'])
                 payment.ref_id = str(response['RefID'])
                 payment.save()
+                
+                for item in order.orders_details1.all():
+                    Warehouse.objects.create(
+                        warehouse_type = WarehouseType.objects.get(id=2),
+                        user_registered = request.user,
+                        product = item.product,
+                        qty = item.qty,
+                        price = item.price
+                    )
+                
                 return redirect('payments:show_verify_message', f"پرداخت با موفقیت انجام شد، کد پیگیری {{'status': True, 'RefID': response['RefID']}}")
 
             else:
