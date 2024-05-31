@@ -9,7 +9,7 @@ def create_random_code(count):
 def send_sms(mobile_number, messages):
     pass
     # try:
-    #     sms = ghasedakpack.Ghasedak("64b028bdcfea1517740d4c4938ca35ae8242105d9600f85aac1a9268648aefa6")
+    #     sms = ghasedakpack.Ghasedak("your_key")
     #     sms.verification({'receptor': str(mobile_number),'type': '1','template': 'randcode','param1': str(messages)})
     # except Exception as error:
     #     print(f"Error is : {error}")
@@ -27,3 +27,14 @@ class FileUpload:
     def upload_to(self, instance, filename):
         filename, ext = os.path.splitext(filename)
         return f"{self.dir}/{self.prefix}/{uuid4()}{ext}"
+    
+    
+    
+def price_by_delivery_tax(price, discount=0):
+    delivery = 25000
+    if price > 1000000:
+        delivery = 0
+    tax = int(0.03 * price)
+    sum = price + delivery + tax
+    sum = sum - (sum*discount/100)
+    return int(sum), delivery, int(tax)

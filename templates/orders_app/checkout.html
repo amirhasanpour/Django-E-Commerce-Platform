@@ -29,8 +29,10 @@
             <div class="row">
                 <div class="col-12 col-lg-6 col-xl-7">
                     <div class="card mb-lg-0">
+                        <form action="{% url "orders:checkout_order" order_id=order.id %}" method="post">
                         <div class="card-body">
                             <h3 class="card-title">جزئیات پرداخت</h3>
+                            {% csrf_token %}
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="checkout-first-name">نام</label>
@@ -76,6 +78,7 @@
                             <button type="submit" class="btn btn-primary btn-xl btn-block">ثبت سفارش</button>
 
                         </div>
+                        </form>
                         
                         <div class="card-divider"></div>
                     </div>

@@ -3,6 +3,7 @@ from apps.accounts.models import Customer
 from apps.products.models import Product
 from django.utils import timezone
 from uuid import uuid4
+import utils
 
 
 
@@ -27,6 +28,14 @@ class Order(models.Model):
     discount = models.IntegerField(blank=True, null=True, default=0, verbose_name='تخفیف روی فاکتور')
     description = models.TextField(blank=True, null=True, verbose_name='توضیحات')
     payment_type = models.ForeignKey(PaymentType, default=None, on_delete=models.CASCADE, null=True, blank=True, verbose_name='نوع پرداخت', related_name='payment')
+    
+    def get_order_total_price(self):
+        sum=0
+        for item in self.orders_details1.all():
+            sum += item.product.get_price_by_discount() * item.qty
+        
+        order_final_price, delivery, tax = utils.price_by_delivery_tax(sum, self.discount)
+        return int(order_final_price*10)
     
     def __str__(self) -> str:
         return f"{self.customer}\t{self.id}\t{self.is_finaly}"
