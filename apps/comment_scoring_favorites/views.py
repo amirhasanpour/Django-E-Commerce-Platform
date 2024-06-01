@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CommentForm
-from .models import Comment
+from .models import Comment, Scoring
 from apps.products.models import Product
 from django.contrib import messages
 from django.views import View
@@ -43,3 +43,24 @@ class CommentView(View):
             return redirect("products:product_details", product.slug)
         messages.error(request, 'خطا در ارسال نظر', 'danger')
         return redirect("products:product_details", product.slug)
+    
+    
+    
+def add_score(request):
+    productId = request.GET.get('productId')
+    score = request.GET.get('score')
+    
+    product = Product.objects.get(id=productId)
+    
+    Scoring.objects.create(
+        product = product,
+        scoring_user = request.user,
+        score = score
+    )
+    
+    return HttpResponse('امتیاز شما با موفقیت ثبت شد')
+
+
+
+
+    

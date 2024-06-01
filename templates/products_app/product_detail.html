@@ -65,100 +65,49 @@
                             </button>
                         </div>
                         <h1 class="product__name">{{product.product_name}}</h1>
-                        <div class="product__rating">
-                            <div class="product__rating-stars">
-                                <div class="rating">
-                                    <div class="rating__body">
-                                        <svg class="rating__star rating__star--active" width="13px" height="12px">
-                                            <g class="rating__fill">
-                                                <use xlink:href="images/sprite.svg#star-normal"></use>
-                                            </g>
-                                            <g class="rating__stroke">
-                                                <use xlink:href="images/sprite.svg#star-normal-stroke"></use>
-                                            </g>
-                                        </svg>
-                                        <div class="rating__star rating__star--only-edge rating__star--active">
-                                            <div class="rating__fill">
-                                                <div class="fake-svg-icon"></div>
-                                            </div>
-                                            <div class="rating__stroke">
-                                                <div class="fake-svg-icon"></div>
-                                            </div>
-                                        </div>
-                                        <svg class="rating__star rating__star--active" width="13px" height="12px">
-                                            <g class="rating__fill">
-                                                <use xlink:href="images/sprite.svg#star-normal"></use>
-                                            </g>
-                                            <g class="rating__stroke">
-                                                <use xlink:href="images/sprite.svg#star-normal-stroke"></use>
-                                            </g>
-                                        </svg>
-                                        <div class="rating__star rating__star--only-edge rating__star--active">
-                                            <div class="rating__fill">
-                                                <div class="fake-svg-icon"></div>
-                                            </div>
-                                            <div class="rating__stroke">
-                                                <div class="fake-svg-icon"></div>
-                                            </div>
-                                        </div>
-                                        <svg class="rating__star rating__star--active" width="13px" height="12px">
-                                            <g class="rating__fill">
-                                                <use xlink:href="images/sprite.svg#star-normal"></use>
-                                            </g>
-                                            <g class="rating__stroke">
-                                                <use xlink:href="images/sprite.svg#star-normal-stroke"></use>
-                                            </g>
-                                        </svg>
-                                        <div class="rating__star rating__star--only-edge rating__star--active">
-                                            <div class="rating__fill">
-                                                <div class="fake-svg-icon"></div>
-                                            </div>
-                                            <div class="rating__stroke">
-                                                <div class="fake-svg-icon"></div>
-                                            </div>
-                                        </div>
-                                        <svg class="rating__star rating__star--active" width="13px" height="12px">
-                                            <g class="rating__fill">
-                                                <use xlink:href="images/sprite.svg#star-normal"></use>
-                                            </g>
-                                            <g class="rating__stroke">
-                                                <use xlink:href="images/sprite.svg#star-normal-stroke"></use>
-                                            </g>
-                                        </svg>
-                                        <div class="rating__star rating__star--only-edge rating__star--active">
-                                            <div class="rating__fill">
-                                                <div class="fake-svg-icon"></div>
-                                            </div>
-                                            <div class="rating__stroke">
-                                                <div class="fake-svg-icon"></div>
-                                            </div>
-                                        </div>
-                                        <svg class="rating__star rating__star--active" width="13px" height="12px">
-                                            <g class="rating__fill">
-                                                <use xlink:href="images/sprite.svg#star-normal"></use>
-                                            </g>
-                                            <g class="rating__stroke">
-                                                <use xlink:href="images/sprite.svg#star-normal-stroke"></use>
-                                            </g>
-                                        </svg>
-                                        <div class="rating__star rating__star--only-edge rating__star--active">
-                                            <div class="rating__fill">
-                                                <div class="fake-svg-icon"></div>
-                                            </div>
-                                            <div class="rating__stroke">
-                                                <div class="fake-svg-icon"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <ul class="product__meta">
                             <li class="product__meta-availability">موجودی: <span class="text-success">موجود در انبار</span></li>
                             <li>برند: <a href="">{{product.brand}}</a></li>
                             <li>تعداد نظرات: <a href="">{{product.comments_product.all | length}}</a> نظر</li>
 
                         </ul>
+                        <div style="display: flex; justify-content: space-between;" class="mt-5">
+
+                            <h6>میانگین امتیاز کالا : <span style="color: red;">{{product.get_average_score}}</span></h6>
+
+                            {% if user.is_authenticated %}
+                                {% if product.get_user_score > 0 %}
+                                    <div>
+                                        {% with ''|center:5 as range %}
+                                            {% for i in range %}
+                                                {% if forloop.counter <= product.get_user_score %}
+                                                    <span id="star_{{forloop.counter}}" class="fa fa-star checked"></span>
+                                                {% else %}
+                                                    <span id="star_{{forloop.counter}}" class="fa fa-star"></span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endwith %}
+                                    </div>
+                                {% else %}
+                                    <div>
+                                        <span id="star_1" class="fa fa-star cursor-pointer" onclick="addScore(1, {{product.id}})"></span>
+                                        <span id="star_2" class="fa fa-star cursor-pointer" onclick="addScore(2, {{product.id}})"></span>
+                                        <span id="star_3" class="fa fa-star cursor-pointer" onclick="addScore(3, {{product.id}})"></span>
+                                        <span id="star_4" class="fa fa-star cursor-pointer" onclick="addScore(4, {{product.id}})"></span>
+                                        <span id="star_5" class="fa fa-star cursor-pointer" onclick="addScore(5, {{product.id}})"></span>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                    <h6 >
+                                        برای امتیاز دهی
+                                        <a href="{% url "accounts:login" %}?next=/products/{{product.slug}}">ورود</a>
+                                        یا
+                                        <a href="{% url "accounts:register" %}?next=/products/{{product.slug}}">ثبت نام</a>
+                                        کنید
+                                    </h6>
+                            {% endif %}
+
+                        </div>
                     </div>
                     <div class="product__sidebar">
                         {% if product.get_number_in_warehouse <= 0 %}

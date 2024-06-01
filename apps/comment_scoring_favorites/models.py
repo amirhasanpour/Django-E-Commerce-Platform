@@ -20,3 +20,22 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'نظر'
         verbose_name_plural = 'نظرات'
+        
+        
+        
+class Scoring(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='کالا', related_name='scoring_product')
+    scoring_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='کاربر امتیاز دهنده', related_name='scoring_user1')
+    register_date = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ درج')
+    score = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], verbose_name='امتیاز')
+    
+    def __str__(self) -> str:
+        return f"{self.product} - {self.scoring_user}"
+    
+    class Meta:
+        verbose_name = 'امتیاز'
+        verbose_name_plural = 'امتیازات'
+        
+        
+        
+

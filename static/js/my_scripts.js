@@ -156,3 +156,36 @@ function showCreateCommentForm(productId, commentId, slug) {
         }
     });
 }
+
+
+
+function addScore(score, productId) {
+    var starRatings = document.querySelectorAll(".fa-star");
+    starRatings.forEach(element => {
+        element.classList.remove("checked");
+    });
+
+    for (let i = 1; i <= score; i++) {
+        const element = document.getElementById("star_" + i);
+        element.classList.add("checked");
+    }
+
+    $.ajax({
+        type: "GET",
+        url: "/csf/add_score/",
+        data: {
+            productId: productId,
+            score: score,
+        },
+        success: function(res) {
+            alert(res);
+        }
+    });
+    starRatings.forEach(element => {
+        element.classList.add("disable");
+    });
+}
+
+
+
+

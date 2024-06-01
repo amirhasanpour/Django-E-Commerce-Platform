@@ -651,3 +651,19 @@ textarea.form-control.is-invalid,
 .post-header__title {
 	font-family: inherit;
 }
+
+.checked {
+	color: orange;
+}
+
+.disable {
+	pointer-events: none;
+}
+
+.fa-heart {
+	color: red;
+}
+
+.cursor-pointer {
+	cursor: pointer;
+}

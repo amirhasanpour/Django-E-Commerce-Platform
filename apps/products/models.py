@@ -5,6 +5,7 @@ from django_ckeditor_5.fields import CKEditor5Field
 from django.urls import reverse
 from datetime import datetime
 from django.db.models import Avg, Sum
+from middlewares.middlewares import RequestMiddleware
 
 
 #----------------------------------------------------------------------------------------------
@@ -114,6 +115,23 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'کالا'
         verbose_name_plural = 'کالا ها'
+        
+    # user scoring for this product
+    def get_user_score(self):
+        request = RequestMiddleware(get_response=None)
+        request = request.thread_local.current_request
+        score = 0
+        user_score = self.scoring_product.filter(scoring_user=request.user)
+        if user_score.count() > 0:
+            score = user_score[0].score
+        return score
+    
+    #avg score for this product
+    def get_average_score(self):
+        avgScore = self.scoring_product.all().aggregate(Avg('score'))['score__avg']
+        if avgScore == None:
+            avgScore = 0
+        return avgScore
         
         
 #----------------------------------------------------------------------------------------------
