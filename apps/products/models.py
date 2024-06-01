@@ -126,12 +126,19 @@ class Product(models.Model):
             score = user_score[0].score
         return score
     
-    #avg score for this product
+    # avg score for this product
     def get_average_score(self):
         avgScore = self.scoring_product.all().aggregate(Avg('score'))['score__avg']
         if avgScore == None:
             avgScore = 0
         return avgScore
+    
+    # favorite product
+    def get_user_favorite(self):
+        request = RequestMiddleware(get_response=None)
+        request = request.thread_local.current_request
+        flag = self.favorite_product.filter(favorite_user=request.user).exists()
+        return flag
         
         
 #----------------------------------------------------------------------------------------------

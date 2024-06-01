@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Comment, Scoring
+from .models import Comment, Scoring, Favorite
 
 
 
@@ -13,3 +13,9 @@ class CommentAdmin(admin.ModelAdmin):
 @admin.register(Scoring)
 class ScoringAdmin(admin.ModelAdmin):
     list_display = ['product', 'scoring_user', 'score']
+    
+    
+    
+@admin.register(Favorite)
+class ScoringAdmin(admin.ModelAdmin):
+    list_display = ['product', 'favorite_user', 'register_date']

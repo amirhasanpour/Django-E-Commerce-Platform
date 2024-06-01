@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CommentForm
-from .models import Comment, Scoring
+from .models import Comment, Scoring, Favorite
 from apps.products.models import Product
 from django.contrib import messages
 from django.views import View
@@ -62,5 +62,22 @@ def add_score(request):
 
 
 
+def add_to_favorite(request):
+    productId = request.GET.get('productId')
+    product = Product.objects.get(id=productId)
+    flag = Favorite.objects.filter(
+                                        Q(favorite_user_id = request.user.id) &
+                                        Q(product_id = productId)).exists()
+    if(not flag):
+        Favorite.objects.create(
+            product = product,
+            favorite_user = request.user)
+        return HttpResponse('این کالا به لیست علایق شما اضافه شد')
+    return HttpResponse('این کالا قبلا در لیست علایق شما اضافه شده')
 
-    
+
+
+class UserFavoriteView(View):
+    def get(self, request, *args, **kwargs):
+        user_favorite_products = Favorite.objects.filter(Q(favorite_user_id = request.user.id))
+        return render(request, 'csf_app/user_favorite.html', {'user_favorite_products': user_favorite_products})

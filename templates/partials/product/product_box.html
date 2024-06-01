@@ -33,13 +33,23 @@
                 افزودن به سبد
             </button>
             {% endif %}
-            <button
-                class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist"
-                type="button">
-                <i class="fa fa-heart"></i>
-                <span
-                    class="fake-svg-icon fake-svg-icon--wishlist-16"></span>
-            </button>
+            {% if user.is_authenticated %}
+                {% if product.get_user_favorite %}
+                    <button
+                        class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist" type="button">
+                        <i class="fa fa-heart"></i>
+                        <span
+                            class="fake-svg-icon fake-svg-icon--wishlist-16"></span>
+                    </button>
+                {% else %}
+                    <button
+                    class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist" type="button" onclick="addToFavorites({{product.id}})">
+                    <i class="fa fa-heart-broken"></i>
+                    <span
+                        class="fake-svg-icon fake-svg-icon--wishlist-16"></span>
+                    </button>
+                {% endif %}
+            {% endif %}
             {% if product.get_number_in_warehouse > 0 %}
             <button
                 class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist"
@@ -89,13 +99,23 @@
                 افزودن به سبد
             </button>
             {% endif %}
-            <button
-                class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist"
-                type="button">
-                <i class="fa fa-heart"></i>
-                <span
-                    class="fake-svg-icon fake-svg-icon--wishlist-16"></span>
-            </button>
+            {% if user.is_authenticated %}
+                {% if product.get_user_favorite %}
+                    <button
+                        class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist" type="button">
+                        <i class="fa fa-heart"></i>
+                        <span
+                            class="fake-svg-icon fake-svg-icon--wishlist-16"></span>
+                    </button>
+                {% else %}
+                    <button
+                    class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist" type="button" onclick="addToFavorites({{product.id}})">
+                    <i class="fa fa-heart-broken"></i>
+                    <span
+                        class="fake-svg-icon fake-svg-icon--wishlist-16"></span>
+                    </button>
+                {% endif %}
+            {% endif %}
             {% if product.get_number_in_warehouse > 0 %}
             <button
                 class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist"
@@ -142,9 +162,23 @@
                 <button class="btn btn-primary product-card__addtocart" type="button" onclick="add_to_shop_cart({{product.id}}, 1)">افزودن به سبد</button>
                 <button class="btn btn-secondary product-card__addtocart product-card__addtocart--list" type="button" onclick="add_to_shop_cart({{product.id}}, 1)">افزودن به سبد</button>
                 {% endif %}
-                <button class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist" type="button">
-                    <i class="fa fa-heart"></i>
-                <span class="fake-svg-icon fake-svg-icon--wishlist-16"></span></button>
+                {% if user.is_authenticated %}
+                    {% if product.get_user_favorite %}
+                        <button
+                            class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist" type="button">
+                            <i class="fa fa-heart"></i>
+                            <span
+                                class="fake-svg-icon fake-svg-icon--wishlist-16"></span>
+                        </button>
+                    {% else %}
+                        <button
+                        class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist" type="button" onclick="addToFavorites({{product.id}})">
+                        <i class="fa fa-heart-broken"></i>
+                        <span
+                            class="fake-svg-icon fake-svg-icon--wishlist-16"></span>
+                        </button>
+                    {% endif %}
+                {% endif %}
                 {% if product.get_number_in_warehouse > 0 %}
                 <button class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__compare" type="button" onclick="add_to_shop_cart({{product.id}}, 1)">
                     <i class="fa fa-shopping-cart"></i>

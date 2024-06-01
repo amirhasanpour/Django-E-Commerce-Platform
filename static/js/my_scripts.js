@@ -188,4 +188,15 @@ function addScore(score, productId) {
 
 
 
-
+function addToFavorites(productId) {
+    $.ajax({
+        type: "GET",
+        url: "/csf/add_to_favorite/",
+        data: {
+            productId: productId,
+        },
+        success: function(res) {
+            alert(res);
+        }
+    });
+}

@@ -38,4 +38,14 @@ class Scoring(models.Model):
         
         
         
-
+class Favorite(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='کالا', related_name='favorite_product')
+    favorite_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='کاربر علاقه مند', related_name='favorite_user1')
+    register_date = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ درج')
+    
+    def __str__(self) -> str:
+        return f"{self.product} - {self.favorite_user}"
+    
+    class Meta:
+        verbose_name = 'علاقه'
+        verbose_name_plural = 'علایق'
