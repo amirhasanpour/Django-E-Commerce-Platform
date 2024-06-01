@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'apps.discounts.apps.DiscountsConfig',
     'apps.payments.apps.PaymentsConfig',
     'apps.warehouses.apps.WarehousesConfig',
+    'apps.comment_scoring_favorites.apps.CommentScoringFavoritesConfig',
     
     'django_admin_listfilter_dropdown',
     'django_ckeditor_5',

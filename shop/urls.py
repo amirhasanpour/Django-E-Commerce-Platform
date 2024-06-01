@@ -28,5 +28,7 @@ urlpatterns = [
     path('discounts/', include('apps.discounts.urls', namespace='discounts')),
     path('payments/', include('apps.payments.urls', namespace='payments')),
     path('warehouses/', include('apps.warehouses.urls', namespace='warehouses')),
+    path('csf/', include('apps.comment_scoring_favorites.urls', namespace='csf')),
+    
     path("ckeditor5/", include('django_ckeditor_5.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

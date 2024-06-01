@@ -60,6 +60,7 @@ $(document).ready(
 // --------------------------------------------------------------------------------------------
 
 
+
 status_of_shop_cart();
 
 
@@ -131,6 +132,27 @@ function update_shop_cart() {
             alert("سبد خرید شما بروزرسانی شد");
             $("#shop_cart_list").html(res);
             status_of_shop_cart();
+        }
+    });
+}
+
+
+
+// --------------------------------------------------------------------------------------------
+
+
+
+function showCreateCommentForm(productId, commentId, slug) {
+    $.ajax({
+        type: "GET",
+        url: "/csf/create_comment/" + slug,
+        data: {
+            productId: productId,
+            commentId: commentId,
+        },
+        success: function(res) {
+            $("#btn_" + commentId).hide();
+            $("#comment_form_" + commentId).html(res);
         }
     });
 }
