@@ -14,4 +14,10 @@ urlpatterns = [
     path('product_group_partial/', views.get_product_groups, name='product_group_partial'),
     path('brands_partial/<slug:slug>/', views.get_brands, name='brands_partial'),
     path('features_for_filter/<slug:slug>/', views.get_features_for_filter, name='features_for_filter'),
+    path('show_compare_list/', views.ShowCompareListView.as_view(), name='show_compare_list'),
+    path('compare_table/', views.compare_table, name='compare_table'),
+    path('status_of_compare_list/', views.status_of_compare_list, name='status_of_compare_list'),
+    path('add_to_compare_list/', views.add_to_compare_list, name='add_to_compare_list'),
+    path('delete_from_compare_list/', views.delete_from_compare_list, name='delete_from_compare_list'),
+    
 ]
