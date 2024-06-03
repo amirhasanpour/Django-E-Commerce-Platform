@@ -5,6 +5,9 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 
+#----------------------------------------------------------------------------------------------
+
+
 class UserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
     password2 = forms.CharField(label="RePassword", widget=forms.PasswordInput)
@@ -27,12 +30,22 @@ class UserCreationForm(forms.ModelForm):
             user.save()
         return user
     
+    
+    
+#----------------------------------------------------------------------------------------------
+
+    
 
 class UserChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField()
     class Meta:
         model =CustomUser
         fields = ['mobile_number', 'password', 'email', 'name', 'family', 'gender', 'is_active', 'is_admin']
+        
+        
+        
+#----------------------------------------------------------------------------------------------
+
         
         
 class RegisterUserForm(ModelForm):
@@ -54,12 +67,22 @@ class RegisterUserForm(ModelForm):
         return pass2
     
     
+    
+#----------------------------------------------------------------------------------------------
+
+    
+    
 class VerifyRegisterForm(forms.Form):
     active_code = forms.CharField(
         label='کد فعالسازی',
         error_messages={'required':'این فیلد نمی تواند خالی باشد'},
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'کد فعالسازی را وارد کنید'})
     )
+    
+    
+    
+#----------------------------------------------------------------------------------------------
+
     
     
 class LoginUserForm(forms.Form):
@@ -73,6 +96,11 @@ class LoginUserForm(forms.Form):
         error_messages={'required':'این فیلد نمی تواند خالی باشد'},
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'رمز عبور را وارد کنید'})
     )
+    
+    
+
+#----------------------------------------------------------------------------------------------
+
     
     
 class ChangePasswordForm(forms.Form):
@@ -96,11 +124,54 @@ class ChangePasswordForm(forms.Form):
         return pass2
     
     
+
+#----------------------------------------------------------------------------------------------
+
+    
+    
 class RememberPasswordForm(forms.Form):
     mobile_number = forms.CharField(
         label='شماره موبایل',
         error_messages={'required':'این فیلد نمی تواند خالی باشد'},
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'شماره موبایل را جهت تغییر رمز وارد کنید'})
     )
+    
+    
+    
+#----------------------------------------------------------------------------------------------
+
+
+
+class UpdateProfileForm(forms.Form):
+    mobile_number = forms.CharField(label="موبایل",
+                                    widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'شماره موبایل خود را وارد کنید', 'readonly': 'readonly'})
+                                    )
+    
+    name = forms.CharField(label="نام",
+                                    error_messages={'required': 'این فیلد نمی تواند خالی باشد'},
+                                    widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'نام خود را وارد کنید'})
+                                    )
+    
+    family = forms.CharField(label="نام خانوادگی",
+                                    error_messages={'required': 'این فیلد نمی تواند خالی باشد'},
+                                    widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'نام خانوادگی خود را وارد کنید'})
+                                    )
+    
+    email = forms.EmailField(label="ایمیل",
+                                    error_messages={'required': 'این فیلد نمی تواند خالی باشد'},
+                                    widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'ایمیل خود را وارد کنید'})
+                                    )
+    
+    phone_number = forms.CharField(label="تلفن ثابت",
+                                    error_messages={'required': 'این فیلد نمی تواند خالی باشد'},
+                                    widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'تلفن ثابت خود را وارد کنید'})
+                                    )
+    
+    address = forms.CharField(label="آدرس",
+                                    error_messages={'required': 'این فیلد نمی تواند خالی باشد'},
+                                    widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'آدرس خود را وارد کنید'})
+                                    )
+    
+    image = forms.ImageField(required=False)
 
     

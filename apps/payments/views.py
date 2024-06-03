@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from apps.orders.models import Order
+from apps.orders.models import Order, OrderState
 from apps.accounts.models import Customer
 from apps.warehouses.models import Warehouse, WarehouseType
 import requests
@@ -99,6 +99,7 @@ class ZarinpalPaymentVerifyView(LoginRequiredMixin, View):
             
             if response['Status'] == 100:
                 order.is_finaly = True
+                order.order_state = OrderState.objects.get(id=1)
                 order.save()
                 
                 payment.is_finally =True

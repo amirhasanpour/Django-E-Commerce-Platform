@@ -17,6 +17,18 @@ class PaymentType(models.Model):
         verbose_name = 'نوع پرداخت'
         verbose_name_plural = 'انواع روش پرداخت'
         
+        
+        
+class OrderState(models.Model):
+    order_state_title = models.CharField(max_length=50, verbose_name='عنوان وضعیت سفارش')
+    
+    def __str__(self) -> str:
+        return self.order_state_title
+    
+    class Meta:
+        verbose_name = 'وضعیت سفارش'
+        verbose_name_plural = 'انواع وضعیت سفارش'
+        
 
 
 class Order(models.Model):
@@ -28,6 +40,7 @@ class Order(models.Model):
     discount = models.IntegerField(blank=True, null=True, default=0, verbose_name='تخفیف روی فاکتور')
     description = models.TextField(blank=True, null=True, verbose_name='توضیحات')
     payment_type = models.ForeignKey(PaymentType, default=None, on_delete=models.CASCADE, null=True, blank=True, verbose_name='نوع پرداخت', related_name='payment')
+    order_state = models.ForeignKey(OrderState, on_delete=models.CASCADE, null=True, blank=True, verbose_name='وضعیت سفارش', related_name='order_state')
     
     def get_order_total_price(self):
         sum=0
