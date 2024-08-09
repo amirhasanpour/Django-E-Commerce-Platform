@@ -99,8 +99,8 @@ DATABASES = {
         'ENGINE': 'mysql.connector.django', 
         'NAME': 'dbshop',
         'USER': 'root',
-        'PASSWORD': '22152AMir@#10',
-        'HOST': 'localhost',
+        'PASSWORD': 't13n8Ksgg5W1/vjtLykxtyPHu3Ts0d4u5sIL4WwZ0JJoqVFt',
+        'HOST': 'mysql.mysql.svc',
         'PORT': '3306',
     }
 }
