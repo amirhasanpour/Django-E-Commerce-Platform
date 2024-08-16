@@ -24,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-b_7tpphmtimjhb#)mh*u)#&*qvkeu(d3-@_wp4t-0v2ss$z*c-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-ALLOWED_HOSTS = []
+# DEBUG = True
+# ALLOWED_HOSTS = []
 
 
-# DEBUG = False
-# ALLOWED_HOSTS = ['*']
+DEBUG = False
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -99,8 +99,8 @@ DATABASES = {
         'ENGINE': 'mysql.connector.django', 
         'NAME': 'dbshop',
         'USER': 'root',
-        'PASSWORD': '22152AMir@#10',
-        'HOST': 'localhost',
+        'PASSWORD': 't13n8Ksgg5W1/vjtLykxtyPHu3Ts0d4u5sIL4WwZ0JJoqVFt',
+        'HOST': 'mysql.mysql.svc',
         'PORT': '3306',
     }
 }
