@@ -7,15 +7,15 @@ import utils
 
 
 
-class PaymentType(models.Model):
-    payment_title = models.CharField(max_length=50, verbose_name='نوع پرداخت')
+# class PaymentType(models.Model):
+#     payment_title = models.CharField(max_length=50, verbose_name='نوع پرداخت')
     
-    def __str__(self) -> str:
-        return self.payment_title
+#     def __str__(self) -> str:
+#         return self.payment_title
     
-    class Meta:
-        verbose_name = 'نوع پرداخت'
-        verbose_name_plural = 'انواع روش پرداخت'
+#     class Meta:
+#         verbose_name = 'نوع پرداخت'
+#         verbose_name_plural = 'انواع روش پرداخت'
         
         
         
@@ -39,7 +39,7 @@ class Order(models.Model):
     order_code = models.UUIDField(unique=True, default=uuid4, editable=False, verbose_name='کد تولیدی برای سفارش')
     discount = models.IntegerField(blank=True, null=True, default=0, verbose_name='تخفیف روی فاکتور')
     description = models.TextField(blank=True, null=True, verbose_name='توضیحات')
-    payment_type = models.ForeignKey(PaymentType, default=None, on_delete=models.CASCADE, null=True, blank=True, verbose_name='نوع پرداخت', related_name='payment')
+    #payment_type = models.ForeignKey(PaymentType, default=None, on_delete=models.CASCADE, null=True, blank=True, verbose_name='نوع پرداخت', related_name='payment')
     order_state = models.ForeignKey(OrderState, on_delete=models.CASCADE, null=True, blank=True, verbose_name='وضعیت سفارش', related_name='order_state')
     
     def get_order_total_price(self):

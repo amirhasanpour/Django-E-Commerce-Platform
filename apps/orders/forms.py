@@ -28,7 +28,7 @@ class OrderForm(forms.Form):
                            widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'توضیحات سفارش', 'rows': 4}),
                            required=False)
     
-    payment_type = forms.ChoiceField(choices=[(item.pk, item) for item in PaymentType.objects.all()],
-                                    widget=forms.RadioSelect())
+    # payment_type = forms.ChoiceField(choices=[(item.pk, item) for item in PaymentType.objects.all()],
+    #                                 widget=forms.RadioSelect())
     
     
