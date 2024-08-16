@@ -4,7 +4,6 @@ RUN pip install --no-cache-dir -r requirement.txt
 COPY . code
 WORKDIR /code
 EXPOSE 8000
-RUN python
 # COPY entrypoint.sh /entrypoint.sh
 # RUN chmod +x /entrypoint.sh
 # ENTRYPOINT ["/entrypoint.sh"]
