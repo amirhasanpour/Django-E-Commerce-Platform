@@ -173,7 +173,7 @@ class CheckoutOrderView(LoginRequiredMixin, View):
             try:
                 order = Order.objects.get(id=order_id)
                 order.description = cd['description']
-                order.payment_type = PaymentType.objects.get(id=cd['payment_type'])
+               # order.payment_type = PaymentType.objects.get(id=cd['payment_type'])
                 order.save()
                 
                 user = request.user
